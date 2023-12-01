@@ -2,21 +2,22 @@
 # Author: Armit
 # Create Time: 2022/09/30 
 
+from PIL import ImageFilter
+
 from torch.utils.data import Dataset, DataLoader
 from torchvision.utils import make_grid
 import matplotlib.pyplot as plt
 
 from utils import *
 
-load_im_f32 = lambda fp: pil_to_npimg(load_img(fp)).astype(np.float32).transpose(2, 0, 1) / 255.0    # [C, H, W]
-
 
 class NIPS17_pair(Dataset):
 
-  def __init__(self):
+  def __init__(self, filter:str='none'):
+    self.filter = filter
+
     fps_adv = list(DATA_ADV_PATH.iterdir())
     fps_raw = [DATA_RAW_PATH / fp_adv.name for fp_adv in fps_adv]
-
     self.fps = list(zip(fps_raw, fps_adv))
 
   def __len__(self):
@@ -24,9 +25,15 @@ class NIPS17_pair(Dataset):
 
   def __getitem__(self, idx):
     fp_raw, fp_adv = self.fps[idx]
-    im_raw = load_im_f32(fp_raw)
-    im_adv = load_im_f32(fp_adv)
+    im_raw = pil_to_npimg(self.apply_filter(load_img(fp_raw))).transpose(2, 0, 1).astype(np.float32) / 255.0
+    im_adv = pil_to_npimg(self.apply_filter(load_img(fp_adv))).transpose(2, 0, 1).astype(np.float32) / 255.0
     return im_raw, im_adv
+
+  def apply_filter(self, img:PILImage) -> PILImage:
+    if self.filter == 'none': return img
+    img_low = img.filter(ImageFilter.GaussianBlur(3))
+    if self.filter == 'low': return img_low
+    if self.filter == 'high': return npimg_to_pil(minmax_norm(npimg_diff(pil_to_npimg(img), pil_to_npimg(img_low))))
 
 
 def imshow(X, AX, title=''):

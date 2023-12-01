@@ -51,8 +51,11 @@ def minmax_norm(dx:ndarray, vmin:int=None, vmax:int=None) -> npimg:
   out = (dx - vmin) / (vmax - vmin)
   return (out * 255).astype(np.uint8)
 
+def npimg_diff(x:npimg, y:npimg) -> ndarray:
+  return x.astype(np.int16) - y.astype(np.int16)
+
 def npimg_abs_diff(x:npimg, y:npimg, name:str=None) -> npimg:
-  d = np.abs(x.astype(np.int16) - y.astype(np.int16))
+  d = np.abs(npimg_diff(x, y))
   if name:
     print(f'[{name}]')
     print('  Linf:', d.max() / 255)

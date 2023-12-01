@@ -21,8 +21,8 @@ def plot_cmp(img_raw:PILImage, img_adv:PILImage):
   im_adv_lo = pil_to_npimg(img_adv_lo)
   im_raw = pil_to_npimg(img_raw)
   im_adv = pil_to_npimg(img_adv)
-  im_raw_hi = im_raw - im_raw_lo
-  im_adv_hi = im_adv - im_adv_lo
+  im_raw_hi = minmax_norm(npimg_diff(im_raw, im_raw_lo))
+  im_adv_hi = minmax_norm(npimg_diff(im_adv, im_adv_lo))
 
   print('[metrics]')
   niqe_raw = get_niqe(im_raw) ; print('  niqe_raw:', niqe_raw)
@@ -32,9 +32,9 @@ def plot_cmp(img_raw:PILImage, img_adv:PILImage):
   psnr = peak_signal_noise_ratio(im_raw, im_adv) ; print('  psnr:', psnr)
   ssim = structural_similarity  (to_gray(im_raw), to_gray(im_adv)) ; print('  ssim:', ssim)
 
-  dx    = npimg_abs_diff(im_raw,    im_adv,    name='dx')
-  dx_lo = npimg_abs_diff(im_raw_lo, im_adv_lo, name='dx_lo')
-  dx_hi = npimg_abs_diff(im_raw_hi, im_adv_hi, name='dx_hi')
+  dx    = npimg_abs_diff(im_adv,    im_raw,    name='dx')
+  dx_lo = npimg_abs_diff(im_adv_lo, im_raw_lo, name='dx_lo')
+  dx_hi = npimg_abs_diff(im_adv_hi, im_raw_hi, name='dx_hi')
   dx0    = minmax_norm(dx, vmin=0, vmax=16)   # eps=16/255
   dx0_lo = minmax_norm(dx_lo)
   dx0_hi = minmax_norm(dx_hi)
@@ -68,4 +68,7 @@ def run():
 
 
 if __name__ == '__main__':
-  run()
+  try:
+    run()
+  except KeyboardInterrupt:
+    pass
