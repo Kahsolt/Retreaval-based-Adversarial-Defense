@@ -4,24 +4,43 @@
 
 ----
 
-**What's the proper name for it?**
+Ideas of the retreaval-based methods:
 
-- Patch-pattern replace
-- Highfreq replace
-- Detail reconstruct: PGD/扰动攻击的不变量是什么？抽出这个不变量，再用经验分布重构丢失的信息！
-- Highfreq reconstruct
+- [ ] input pixel patch
+- [ ] input pixel textual patch (f')
+- [ ] cnn fmap patch
+- [ ] cnn fmap textual patch
 
 
-### Quickstart
+### quick start
 
-  - 
-  - 
-  - 
+⚪ Preparation
 
-#### refenrences
+- download the datasets [here](https://pan.quark.cn/s/cb9b0dbd64f7), unzip to `data/` folder 
+  - NIPS17 & ssa-cwa-200: clean and pre-generated adversarial images from [Attack-Bard](https://github.com/thu-ml/Attack-Bard)
+  - imagenet-1k: 1000 cherry-picked images from the imagenet validation set
 
-- Attack-Bard: [https://github.com/thu-ml/Attack-Bard](https://github.com/thu-ml/Attack-Bard
+⚪ Warmup
+
+- run `vis_NIPS17.py`, try understand what happens
+- run `run_NIPS17_clf.py`, try understand what happens
+- run `run.py`, try understand what happens
+- run `run.py --atk`, try understand what happens
+
+⚪ Your Tasks
+
+> Use `imagenet-1k` as the ref-data to remove adv noise on `ssa-cwa-200` (pregen adv of `NIPS17`)
+> Our final goal: let `run.py --atk --dfn` work! :)
+
+- [ ] implement `defenses.vector_db`
+- [ ] implement `defenses.img_hifreq`
+- [ ] implement `defenses.patch_replace`
+
+
+#### references
+
 - rvc-project: [https://github.com/RVC-Project/Retrieval-based-Voice-Conversion-WebUI](https://github.com/RVC-Project/Retrieval-based-Voice-Conversion-WebUI)
+- the-ever-lasting-adversarial-war: [https://github.com/Kahsolt/the-ever-lasting-adversarial-war](https://github.com/Kahsolt/the-ever-lasting-adversarial-war)
 
 ----
 by Armit

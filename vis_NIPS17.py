@@ -2,14 +2,12 @@
 # Author: Armit
 # Create Time: 2023/10/26
 
+# visualize the NIPS17 pre-generated adv images
 # https://blog.csdn.net/qq_42951560/article/details/115456471
-
-from PIL import ImageFilter
-from PIL.Image import Image as PILImage
 
 import matplotlib.pyplot as plt
 from niqe.niqe import get_niqe
-from skimage.metrics import *
+from skimage.metrics import mean_squared_error, normalized_root_mse, peak_signal_noise_ratio, structural_similarity
 
 from utils import *
 
@@ -45,22 +43,22 @@ def plot_cmp(img_raw:PILImage, img_adv:PILImage):
   plt.clf()
   plt.subplot(3, 4,  1) ; plt.axis('off') ; plt.title('X')      ; plt.imshow(im_raw)
   plt.subplot(3, 4,  2) ; plt.axis('off') ; plt.title('AX')     ; plt.imshow(im_adv)
-  plt.subplot(3, 4,  3) ; plt.axis('off') ; plt.title('DX0')    ; plt.imshow(dx0)
+  plt.subplot(3, 4,  3) ; plt.axis('off') ; plt.title('DX3')    ; plt.imshow(dx0)
   plt.subplot(3, 4,  4) ; plt.axis('off') ; plt.title('DX1')    ; plt.imshow(dx1)
   plt.subplot(3, 4,  5) ; plt.axis('off') ; plt.title('X_lo')   ; plt.imshow(im_raw_lo)
   plt.subplot(3, 4,  6) ; plt.axis('off') ; plt.title('AX_lo')  ; plt.imshow(im_adv_lo)
-  plt.subplot(3, 4,  7) ; plt.axis('off') ; plt.title('DX0_lo') ; plt.imshow(dx0_lo)
+  plt.subplot(3, 4,  7) ; plt.axis('off') ; plt.title('DX3_lo') ; plt.imshow(dx0_lo)
   plt.subplot(3, 4,  8) ; plt.axis('off') ; plt.title('DX1_lo') ; plt.imshow(dx1_lo)
   plt.subplot(3, 4,  9) ; plt.axis('off') ; plt.title('X_hi')   ; plt.imshow(im_raw_hi)
   plt.subplot(3, 4, 10) ; plt.axis('off') ; plt.title('AX_hi')  ; plt.imshow(im_adv_hi)
-  plt.subplot(3, 4, 11) ; plt.axis('off') ; plt.title('DX0_hi') ; plt.imshow(dx0_hi)
+  plt.subplot(3, 4, 11) ; plt.axis('off') ; plt.title('DX3_hi') ; plt.imshow(dx0_hi)
   plt.subplot(3, 4, 12) ; plt.axis('off') ; plt.title('DX1_hi') ; plt.imshow(dx1_hi)
   plt.show()
 
 
 def run():
-  for fp_adv in DATA_ADV_PATH.iterdir():
-    fp_raw = DATA_RAW_PATH / fp_adv.name
+  for fp_adv in DATA_NIPS17_ADV_PATH.iterdir():
+    fp_raw = DATA_NIPS17_RAW_PATH / fp_adv.name
 
     img_raw = load_img(fp_raw)
     img_adv = load_img(fp_adv)

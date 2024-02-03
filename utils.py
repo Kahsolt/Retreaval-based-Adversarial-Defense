@@ -2,62 +2,141 @@
 # Author: Armit
 # Create Time: 2022/09/27 
 
-from pathlib import Path
+import warnings ; warnings.filterwarnings('ignore', category=UserWarning)
 
+import json
+import random
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageFilter
 from PIL.Image import Image as PILImage
+from argparse import ArgumentParser, Namespace
+from traceback import print_exc
+from typing import *
 
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch import Tensor
+from torch.nn import Module as Model
 import numpy as np
 from numpy import ndarray
-
-BASE_PATH = Path(__file__).parent
-DATA_PATH = BASE_PATH / 'data'
-DATA_RAW_PATH = DATA_PATH / 'NIPS17'
-DATA_ADV_PATH = DATA_PATH / 'ssa-cwa-200'
-
-npimg = ndarray
+from numpy.typing import NDArray
+from tqdm import tqdm
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-cpu = 'cpu'   # for qt model
 
-if device == 'cuda':
-  torch.backends.cudnn.enabled = False
-  torch.backends.cudnn.benchmark = False
+IDENTITY = lambda *args: args[0] if len(args) == 1 else args
+
+BASE_PATH = Path(__file__).parent
+LOG_PATH = BASE_PATH / 'log' ; LOG_PATH.mkdir(exist_ok=True)
+DATA_PATH = BASE_PATH / 'data'
+DATA_IMAGENET_1K_PATH = DATA_PATH / 'imagenet-1k'
+DATA_NIPS17_RAW_PATH = DATA_PATH / 'NIPS17'
+DATA_NIPS17_ADV_PATH = DATA_PATH / 'ssa-cwa-200'
+
+IM_U8_TYPES = ['u', 'u8', 'uint8', np.uint8]
+IM_F32_TYPES = ['f', 'f32', 'float32', np.float32]
+IM_TYPES = IM_U8_TYPES + IM_F32_TYPES
+
+npimg_u8 = NDArray[np.uint8]        # vrng [0, 255]
+npimg_f32 = NDArray[np.float32]     # vrng [0, 1]
+npimg = Union[npimg_u8, npimg_f32]
+npimg_dx = NDArray[np.int16]        # vrng [-255, 255]
+npimg_hi = NDArray[np.float32]      # vrng [-1, 1]
+
+
+def seed_everything(seed:int) -> int:
+  random.seed(seed)
+  np.random.seed(seed)
+  torch.manual_seed(seed)
+  torch.cuda.manual_seed(seed)
+  torch.cuda.manual_seed_all(seed)
+
+  if device == 'cuda':
+    torch.backends.cudnn.enabled = True
+    torch.backends.cudnn.benchmark = True
+    torch.backends.cudnn.deterministic = False
+
+
+Record = Dict[str, Any]
+DB = Dict[str, List[Record]]
+
+'''
+{
+  'model': [{
+    cmd: str
+    args: dict
+    dt: str
+    ts: int
+    acc: float
+    racc: float
+    pcr: float
+    asr: float
+  }]
+}
+'''
+
+def db_load(fp:Path) -> DB:
+  if not fp.exists(): return {}
+  with open(fp, 'r', encoding='utf-8') as fh:
+    return json.load(fh)
+
+def db_save(db:DB, fp:Path):
+  def cvt(v:Any) -> str:
+    if isinstance(v, Path): return str(v)
+    return v
+  with open(fp, 'w', encoding='utf-8') as fh:
+    json.dump(db, fh, indent=2, ensure_ascii=False, default=cvt)
+
+def db_add(db:DB, model:str, rec:Record):
+  if model in db: db[model].append(rec)
+  else:           db[model] = [rec]
 
 
 def load_img(fp:Path) -> PILImage:
   return Image.open(fp).convert('RGB')
 
-def pil_to_npimg(img:PILImage) -> npimg:
-  return np.asarray(img, dtype=np.uint8)
+def load_im(fp:Path, dtype:str='u8') -> npimg:
+  return pil_to_npimg(load_img(fp), dtype)
+
+def pil_to_npimg(img:PILImage, dtype:str='u8') -> npimg:
+  assert dtype in IM_TYPES
+  im = np.asarray(img, dtype=np.uint8)
+  if dtype in IM_U8_TYPES: return im
+  return im.astype(np.float32) / 255.0
 
 def npimg_to_pil(im:npimg) -> PILImage:
-  assert im.dtype in [np.uint8, np.float32]
-  if im.dtype == np.float32:
+  assert im.dtype in IM_TYPES
+  if im.dtype in IM_F32_TYPES:
     assert 0.0 <= im.min() and im.max() <= 1.0
   return Image.fromarray(im)
 
-def to_ch_avg(x:ndarray) -> ndarray:
-  return np.tile(x.mean(axis=-1, keepdims=True), (1, 1, 3))
+def hwc2chw(im:npimg) -> npimg:
+  return im.transpose(2, 0, 1)
+
+def chw2hwc(im:npimg) -> npimg:
+  return im.transpose(1, 2, 0)
+
 
 def to_gray(im:npimg) -> npimg:
   return pil_to_npimg(npimg_to_pil(im).convert('L'))
 
-def minmax_norm(dx:ndarray, vmin:int=None, vmax:int=None) -> npimg:
-  vmin = vmin or dx.min()
-  vmax = vmax or dx.max()
-  out = (dx - vmin) / (vmax - vmin)
-  return (out * 255).astype(np.uint8)
-
-def npimg_diff(x:npimg, y:npimg) -> ndarray:
-  return x.astype(np.int16) - y.astype(np.int16)
+def to_ch_avg(x:ndarray) -> ndarray:
+  return np.tile(x.mean(axis=-1, keepdims=True), (1, 1, 3))
 
 def npimg_abs_diff(x:npimg, y:npimg, name:str=None) -> npimg:
-  d = np.abs(npimg_diff(x, y))
+  d: ndarray = np.abs(npimg_diff(x, y))
   if name:
     print(f'[{name}]')
     print('  Linf:', d.max() / 255)
     print('  L1:',  d.mean() / 255)
   return d
+
+def npimg_diff(x:npimg_u8, y:npimg_u8) -> npimg_dx:
+  return x.astype(np.int16) - y.astype(np.int16)
+
+def minmax_norm(dx:npimg_dx, vmin:int=None, vmax:int=None) -> npimg_u8:
+  vmin = vmin or dx.min()
+  vmax = vmax or dx.max()
+  out = (dx - vmin) / (vmax - vmin)
+  return (out * 255).astype(np.uint8)

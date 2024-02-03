@@ -2,10 +2,10 @@
 # Author: Armit
 # Create Time: 2022/09/30 
 
-import warnings ; warnings.simplefilter('ignore')
-
-from torch.nn import Module
 import torchvision.models as M
+
+from utils import *
+
 
 MODELS = [
   'resnet18',
@@ -60,5 +60,5 @@ MODELS = [
 ]
 
 
-def get_model(name) -> Module:
+def get_model(name) -> Model:
   return getattr(M, name)(pretrained=True)
