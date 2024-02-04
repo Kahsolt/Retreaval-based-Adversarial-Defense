@@ -14,6 +14,7 @@ class FGSMAttack:
     X = X.clone().detach()
     Y = Y.clone().detach()
     self.model.eval()
+    AX = X.clone().detach()
     
     with torch.enable_grad():
       AX.requires_grad = True

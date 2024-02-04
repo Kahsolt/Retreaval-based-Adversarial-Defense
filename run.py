@@ -10,6 +10,7 @@ from pprint import pprint as pp
 from data import ImageNet_1k, NIPS17_pair, normalize, DataLoader
 from model import get_model, MODELS
 from attacks import PGDAttack
+from attacks import FGSMAttack
 from defenses import PatchReplaceDefense
 from utils import *
 
@@ -51,8 +52,11 @@ def run(args):
     dataset = ImageNet_1k()
     dataloader = DataLoader(dataset, batch_size=args.batch_size, num_workers=0)
     dfn = PatchReplaceDefense() if args.dfn else IDENTITY
-    atk = PGDAttack(model, args.eps, args.alpha, args.steps, not args.nrs, dfn) if args.atk else IDENTITY
-
+    #atk = PGDAttack(model, args.eps, args.alpha, args.steps, not args.nrs, dfn) if args.atk else IDENTITY
+    if args.atk == 'PGD':
+      atk = PGDAttack(model, args.eps, args.alpha, args.steps, not args.nrs, dfn)
+    elif args.atk == 'FGSM':
+      atk = FGSMAttack(model, args.eps, dfn)
     t = time()
     acc, racc, pcr, atr = run_metrics(model, dataloader, atk, dfn)
     ts = time() - t
