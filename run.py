@@ -85,7 +85,7 @@ if __name__ == '__main__':
   parser.add_argument('-M', '--model', default='resnet18', choices=MODELS, help='model name')
   parser.add_argument('-B', '--batch_size', type=int, default=20, help='run batch size')
   # attack
-  parser.add_argument('--atk', action='store_true')
+  parser.add_argument('--atk', default = 'PGD', choices=['FGSM', 'PGD'], help='attack method')
   parser.add_argument('--eps',   type=eval, default=8/255, help='PGD total threshold')
   parser.add_argument('--alpha', type=eval, default=1/255, help='PGD step size')
   parser.add_argument('--steps', type=int,  default=10,    help='PGD step count')
