@@ -17,8 +17,7 @@ class MIFGSMAttack:
     X = X.clone().detach()
     Y = Y.clone().detach()
     AX = X.clone().detach()
-    print('X.shape:', X.shape)
-    self.model.eval()
+
     momentum = torch.zeros_like(X).detach()
     loss = torch.nn.CrossEntropyLoss()
     
@@ -26,10 +25,11 @@ class MIFGSMAttack:
       AX.requires_grad = True
       outputs = self.model(normalize(self.dfn(AX)))
       cost = loss(outputs, Y)
-      grad = torch.autograd.grad(cost, AX, retain_graph=False, create_graph=False)[0]
-      grad = grad / torch.mean(torch.abs(grad), dim=(1, 2, 3), keepdim=True)
-      grad = grad + momentum * 1.0
-      momentum = grad
+      
+      g = grad(cost, AX, retain_graph=False, create_graph=False)[0]
+      g = g / torch.mean(torch.abs(grad), dim=(1, 2, 3), keepdim=True)
+      g = g + momentum * 1.0
+      momentum = g
       AX = AX.detach() + self.alpha * grad.sign()
       delta = torch.clamp(AX - X, min=-self.eps, max=self.eps)
       AX = torch.clamp(X + delta, min=0, max=1).detach()
