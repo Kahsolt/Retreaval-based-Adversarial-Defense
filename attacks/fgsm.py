@@ -23,6 +23,7 @@ class FGSMAttack:
     
     g = grad(loss, AX, grad_outputs=loss)[0]
     AX = X + self.eps * g.sign()
+    AX = torch.clamp(AX, min=0.0, max=1.0).detach()
     return (AX * 255).round().div(255.0)
   
 if __name__ == '__main__':
