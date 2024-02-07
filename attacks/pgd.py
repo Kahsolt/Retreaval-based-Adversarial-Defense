@@ -9,7 +9,7 @@ from attacks.base import *
 
 class PGDAttack(BaseAttack):
 
-  def __init__(self, model:Model, dfn:Callable=None, eps:float=8/255, alpha:float=1/255, steps:int=20, random_start:bool=True):
+  def __init__(self, model:Model, eps:float=8/255, alpha:float=1/255, steps:int=20, random_start:bool=True, dfn:Callable=None,):
     super().__init__(model, dfn)
 
     self.eps = eps
