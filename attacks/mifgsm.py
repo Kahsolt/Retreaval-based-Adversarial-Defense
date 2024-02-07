@@ -4,7 +4,7 @@ from attacks.base import *
 
 class MIFGSMAttack(BaseAttack):
     
-  def __init__(self, model:Model, eps:float=0.03, alpha:float=0.01, steps:int=40, random_start:bool=True, decay:float=1.0, dfn:Callable=None):
+  def __init__(self, model:Model, eps:float=0.03, alpha:float=0.01, steps:int=40, random_start:bool=True, dfn:Callable=None, decay:float=1.0):
     super().__init__(model, dfn)
     
     self.model = model
@@ -33,9 +33,6 @@ class MIFGSMAttack(BaseAttack):
         outputs = self.model_forward(AX)
         loss = torch.nn.CrossEntropyLoss()
         cost = loss(outputs, Y)
-      
-      print(type(self.decay))
-      breakpoint()
       
       g = grad(cost, AX, grad_outputs= cost, retain_graph=False, create_graph=False)[0]
       g = g / torch.mean(torch.abs(g), dim=(1, 2, 3), keepdim=True)
