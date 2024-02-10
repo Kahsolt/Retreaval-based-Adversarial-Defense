@@ -2,3 +2,5 @@ numpy
 scikit-image
 matplotlib
 tqdm
+PyWavelets
+faiss-cpu
