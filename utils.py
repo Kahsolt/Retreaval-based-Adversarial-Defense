@@ -117,6 +117,8 @@ def hwc2chw(im:npimg) -> npimg:
 def chw2hwc(im:npimg) -> npimg:
   return im.transpose(1, 2, 0)
 
+def npimg_to_tensor(im:npimg_f32) -> Tensor:
+  return torch.from_numpy(hwc2chw(im))
 
 def to_gray(im:npimg) -> npimg:
   return pil_to_npimg(npimg_to_pil(im).convert('L'))
@@ -140,3 +142,13 @@ def minmax_norm(dx:npimg_dx, vmin:int=None, vmax:int=None) -> npimg_u8:
   vmax = vmax or dx.max()
   out = (dx - vmin) / (vmax - vmin)
   return (out * 255).astype(np.uint8)
+
+def Linf_L1_L2(X:Tensor, AX:Tensor=None) -> Tuple[float, float, float]:
+  if AX is None:
+    DX = X
+  else:
+    DX = (AX - X).abs()
+  Linf = DX.max()
+  L1 = DX.mean()
+  L2 = (DX**2).sum().sqrt()
+  return [x.item() for x in [Linf, L1, L2]]
