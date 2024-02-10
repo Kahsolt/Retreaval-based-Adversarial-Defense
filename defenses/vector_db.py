@@ -35,7 +35,7 @@ class VectorDB:
     self.index.add(v)
 
 
-  def search(self, v:ndarray, k:int=10) -> (ndarray,ndarray):
+  def search(self, v:ndarray, k:int=10) -> (ndarray, ndarray):
     assert self.dim == v.shape[-1],"dim error"
     # list and distance
     return self.index.search(v, k)
