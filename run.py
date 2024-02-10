@@ -5,13 +5,27 @@
 import sys
 from time import time
 from datetime import datetime
+from inspect import signature
 from pprint import pprint as pp
 
 from data import ImageNet_1k, NIPS17_pair, normalize, DataLoader
 from model import get_model, MODELS
-from attacks import PGDAttack
+from attacks import *
 from defenses import PatchReplaceDefense
 from utils import *
+
+ATTACK_METHODS = [k[:-len('Attack')] for k, v in globals().items() if k.endswith('Attack') and issubclass(v, BaseAttack) and v != BaseAttack]
+
+
+def get_attack(args, model:Model, dfn:Callable) -> BaseAttack:
+  atk_cls = globals()[f'{args.atk}Attack']
+  fixed_args = ['model', 'dfn']
+  kwargs = { }
+  for name in signature(atk_cls).parameters:
+    if name in fixed_args: continue
+    if hasattr(args, name):
+      kwargs[name] = getattr(args, name)
+  return atk_cls(model, dfn, **kwargs)
 
 
 @torch.no_grad()
@@ -51,7 +65,7 @@ def run(args):
     dataset = ImageNet_1k()
     dataloader = DataLoader(dataset, batch_size=args.batch_size, num_workers=0)
     dfn = PatchReplaceDefense() if args.dfn else IDENTITY
-    atk = PGDAttack(model, args.eps, args.alpha, args.steps, not args.nrs, dfn) if args.atk else IDENTITY
+    atk = get_attack(args, model, dfn)
 
     t = time()
     acc, racc, pcr, atr = run_metrics(model, dataloader, atk, dfn)
@@ -85,7 +99,7 @@ if __name__ == '__main__':
   parser.add_argument('-M', '--model', default='resnet18', choices=MODELS, help='model name')
   parser.add_argument('-B', '--batch_size', type=int, default=20, help='run batch size')
   # attack
-  parser.add_argument('--atk', action='store_true')
+  parser.add_argument('--atk',   default='PGD', choices=ATTACK_METHODS, help='attack method')
   parser.add_argument('--eps',   type=eval, default=8/255, help='PGD total threshold')
   parser.add_argument('--alpha', type=eval, default=1/255, help='PGD step size')
   parser.add_argument('--steps', type=int,  default=10,    help='PGD step count')
