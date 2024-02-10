@@ -4,12 +4,15 @@
 
 from __future__ import annotations
 
-from utils import *
 import faiss
+from faiss import IndexFlatL2
+
+from utils import *
+
 
 class VectorDB:
 
-  def __init__(self, index:faiss.IndexFlatL2=None, dim:int=256, fp:Path=None):
+  def __init__(self, index:IndexFlatL2=None, dim:int=256, fp:Path=None):
     self.index = index
     self.dim = dim
     self.fp = fp
@@ -22,51 +25,48 @@ class VectorDB:
     return VectorDB(index, dim, fp)
 
   def save(self, fp:Path=None):
-    # fp = "xxx.index"
     fp = fp or self.fp
     assert fp != None, "no Path"
-    assert fp.suffix == ".index","xxx.index"
+    assert fp.suffix == ".index", "xxx.index"
 
     faiss.write_index(self.index, str(fp))
 
   def add(self, v:ndarray):
     # v.shape == [N, D]
-    assert self.dim == v.shape[-1],"dim error"
+    assert self.dim == v.shape[-1], "dim error"
     self.index.add(v)
 
-
-  def search(self, v:ndarray, k:int=10) -> (ndarray, ndarray):
-    assert self.dim == v.shape[-1],"dim error"
+  def search(self, v:ndarray, k:int=10) -> Tuple[ndarray, ndarray]:
+    assert self.dim == v.shape[-1], "dim error"
     # list and distance
     return self.index.search(v, k)
 
 
 if __name__ == '__main__':
-  # data
-  dim = 64
-  data = np.random.rand(500, dim).astype('float32')
-  search_data = np.random.random((5, dim)).astype('float32')
+  from utils import LOG_PATH
+  index_fp = LOG_PATH / 'test.index'
 
-  # init
-  index = faiss.IndexFlatL2(dim) 
-  DB = VectorDB(index, dim)
+  np.random.seed(114514)
 
   # load data
-  # print(Path.cwd()/'defenses/index.index')
-  # DB = VectorDB.load(Path.cwd()/'defenses/index.index')
-
-  # add 
-  DB.add(data)
-  print(DB.index.ntotal)
+  if index_fp.exists():
+    print('>> load from index file:', index_fp)
+    vec_db = VectorDB.load(index_fp)
+    dim = vec_db.dim
+  else:
+    print('>> make new index file:', index_fp)
+    dim = 64
+    index = faiss.IndexFlatL2(dim) 
+    vec_db = VectorDB(index, dim, index_fp)
+    data = np.random.rand(500, dim).astype('float32')
+    vec_db.add(data)
+  print('dataset size:', vec_db.index.ntotal)
 
   # search
-  D,I = DB.search(search_data, 4)
-  print(I)
-  print(D)
+  search_data = np.random.random((5, dim)).astype('float32')
+  D, I = vec_db.search(search_data, 4)
+  print('indexes:', I)
+  print('dists:', D)
 
   # save
-  # DB.save(Path.cwd()/'defenses/newindex.index')
-  DB.save()
-
-  # unitest
-  pass
+  vec_db.save()

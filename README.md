@@ -32,8 +32,8 @@ Ideas of the retreaval-based methods:
 > Use `imagenet-1k` as the ref-data to remove adv noise on `ssa-cwa-200` (pregen adv of `NIPS17`)
 > Our final goal: let `run.py --atk --dfn` work! :)
 
-- [ ] implement `defenses.vector_db`
-- [ ] implement `defenses.img_hifreq`
+- [x] implement `defenses.vector_db`
+- [x] implement `defenses.img_hifreq`
 - [ ] implement `defenses.patch_replace`
 
 
