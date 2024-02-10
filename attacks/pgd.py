@@ -47,5 +47,3 @@ if __name__ == '__main__':
   from attacks.unit_test import unittest
   
   unittest(PGDAttack)
-  # unitest
-  pass
