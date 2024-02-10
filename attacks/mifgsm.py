@@ -45,10 +45,9 @@ class MIFGSMAttack(BaseAttack):
       AX = self.std_clip(X + delta).detach()
     
     return self.std_quant(AX)
-  
+
+
 if __name__ == '__main__':
   from attacks.unit_test import unittest
   
   unittest(MIFGSMAttack)
-  # unitest
-  pass
