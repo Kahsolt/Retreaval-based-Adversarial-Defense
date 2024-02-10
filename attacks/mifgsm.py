@@ -47,7 +47,7 @@ class MIFGSMAttack(BaseAttack):
     return self.std_quant(AX)
   
 if __name__ == '__main__':
-  from unit_test import unittest
+  from attacks.unit_test import unittest
   
   unittest(MIFGSMAttack)
   # unitest

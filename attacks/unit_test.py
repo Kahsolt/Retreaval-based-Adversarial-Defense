@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# Author: zhou_fanqi
+# Create Time: 2024/2/10
+
 from plot import plot3
 from utils import *
 from model import get_model
