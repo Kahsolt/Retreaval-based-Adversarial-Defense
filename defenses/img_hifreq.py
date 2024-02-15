@@ -14,13 +14,13 @@ def img_hifreq_by_unsharp_mask(img:PILImage, args:Namespace) -> npimg_hi:
   R: int = args.radius
   
   img_lo = img.filter(ImageFilter.GaussianBlur(R))
-  im_lo = pil_to_npimg(img_lo)
+  im_lo = pil_to_npimg(img_lo, 'f32')
 
-  im_raw = pil_to_npimg(img)
-  im_hi = minmax_norm(npimg_diff(im_raw, im_lo))
+  im_raw = pil_to_npimg(img, 'f32')
+  im_hi = im_raw - im_lo
 
   if DEBUG_PLOT:
-    plt.imshow(im_hi) ; plt.axis('off')
+    plt.imshow(minmax_norm(im_hi)) ; plt.axis('off')
     plt.show()
 
   return im_hi, im_lo
@@ -44,19 +44,16 @@ def img_hifreq_by_fft(img:PILImage, args:Namespace) -> npimg_hi:
 
   if DEBUG_PLOT:
     freq_view = np.log1p(np.abs(freq))
-    freq_view = minmax_norm(freq_view)
-    plt.imshow(freq_view) ; plt.axis('off')
+    plt.imshow(minmax_norm(freq_view)) ; plt.axis('off')
     plt.show()
 
   lf = freq * lpf
   img_l = np.abs(ifft2(ifftshift(lf), axes=(0, 1)))
-  img_l = np.clip(img_l, 0, 255) 
-  img_l = minmax_norm(img_l)
+  img_l = np.clip(img_l, 0, 255).round() / 255
 
   hf = freq * hpf
   img_h = np.abs(ifft2(ifftshift(hf), axes=(0, 1)))
-  img_h = np.clip(img_h, 0, 255) 
-  img_h = img_h.astype(np.uint8)
+  img_h = np.clip(img_h, 0, 255).round() / 255
 
   return img_h, img_l
 
@@ -72,12 +69,12 @@ def img_hifreq_by_dwt(img:PILImage, args:Namespace) -> npimg_hi:
   b_lo = Image.fromarray(cA3).convert('L').resize(img.size)
   new = Image.merge('RGB', (r_lo, g_lo, b_lo))
 
-  img_lo = pil_to_npimg(new)
-  img_raw = pil_to_npimg(img)
-  img_hi = minmax_norm(npimg_diff(img_raw, img_lo))
+  img_lo = pil_to_npimg(new, 'f32')
+  img_raw = pil_to_npimg(img, 'f32')
+  img_hi = img_raw - img_lo
 
   if DEBUG_PLOT:
-    plt.imshow(img_hi) ; plt.axis('off')
+    plt.imshow(minmax_norm(img_hi)) ; plt.axis('off')
     plt.show()
 
   return img_hi, img_lo
@@ -99,6 +96,7 @@ if __name__ == '__main__':
   fp = DATA_IMAGENET_1K_PATH / 'val' / 'ILSVRC2012_val_00000031.png'
   image = load_img(fp)
   img_h, img_l = img_hifreq_by(args.method, image, args)
+  img_h = minmax_norm(img_h)
 
   plt.subplot(131) ; plt.imshow(image) ; plt.axis('off') ; plt.title('img')
   plt.subplot(132) ; plt.imshow(img_h) ; plt.axis('off') ; plt.title('high')

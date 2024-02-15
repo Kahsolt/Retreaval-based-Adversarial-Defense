@@ -6,6 +6,7 @@ import warnings ; warnings.filterwarnings('ignore', category=UserWarning)
 
 import json
 import random
+from time import time
 from pathlib import Path
 from PIL import Image, ImageFilter
 from PIL.Image import Image as PILImage
@@ -44,6 +45,15 @@ npimg = Union[npimg_u8, npimg_f32]
 npimg_dx = NDArray[np.int16]        # vrng [-255, 255]
 npimg_hi = NDArray[np.float32]      # vrng [-1, 1]
 
+
+def timer(fn):
+  def wrapper(*args, **kwargs):
+    start = time()
+    r = fn(*args, **kwargs)
+    end = time()
+    print(f'[Timer]: {fn.__name__} took {end - start:.3f}s')
+    return r
+  return wrapper
 
 def seed_everything(seed:int) -> int:
   random.seed(seed)
@@ -109,6 +119,7 @@ def npimg_to_pil(im:npimg) -> PILImage:
   assert im.dtype in IM_TYPES
   if im.dtype in IM_F32_TYPES:
     assert 0.0 <= im.min() and im.max() <= 1.0
+    im = (im * 255.0).astype(np.uint8)
   return Image.fromarray(im)
 
 def hwc2chw(im:npimg) -> npimg:
@@ -119,6 +130,12 @@ def chw2hwc(im:npimg) -> npimg:
 
 def npimg_to_tensor(im:npimg_f32) -> Tensor:
   return torch.from_numpy(hwc2chw(im))
+
+def tensor_to_npimg(X:Tensor) -> npimg_f32:
+  return chw2hwc(X.detach().cpu().numpy())
+
+def std_clip(im:npimg_f32) -> npimg_f32:
+  return np.clip(im, 0.0, 1.0)
 
 def to_gray(im:npimg) -> npimg:
   return pil_to_npimg(npimg_to_pil(im).convert('L'))
