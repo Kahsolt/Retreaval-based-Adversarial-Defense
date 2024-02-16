@@ -122,6 +122,7 @@ if __name__ == '__main__':
   parser.add_argument('--nrs', action='store_true', help='no random start, like the original FGSM')
   # defense
   parser.add_argument('--dfn', default='None', choices=DEFENSE_METHODS, help='defense method')
+  parser.add_argument('--ref_db',     type=str, default='NIPS17', choices=['NIPS17', 'ImageNet'], help='ref dataset name')
   parser.add_argument('--patch_size', type=int, default=16, help='patch size')
   parser.add_argument('--order',      type=int, default=0,  help='content order of replacement')
   # misc

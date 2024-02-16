@@ -76,7 +76,7 @@ class PatchReplaceApproxGrad(Function):
 
 class PatchReplaceDefense(BaseDefense):
 
-  def __init__(self, patch_size:int=16, order:int=0):
+  def __init__(self, ref_db:str='NIPS17', patch_size:int=16, order:int=0):
     self.order = order
     self.patch_size = patch_size
     self.shift_size = patch_size // 2
@@ -93,10 +93,15 @@ class PatchReplaceDefense(BaseDefense):
     else: raise ValueError(f'unknwon order: {order}')
     self.apply_fn = apply_fn
 
-    index_fp = LOG_PATH / f'NIPS17_ps={patch_size}_f={order}.index'
+    if ref_db == 'NIPS17':
+      index_fp = LOG_PATH / f'NIPS17_ps={patch_size}_f={order}.index'
+      img_dp = DATA_NIPS17_RAW_PATH
+    elif ref_db == 'ImageNet':
+      index_fp = LOG_PATH / f'ImageNet_ps={patch_size}_f={order}.index'
+      img_dp = DATA_IMAGENET_1K_PATH / 'val'
     if not index_fp.exists():
       import os
-      vdb = make_vdb(DATA_NIPS17_RAW_PATH, patch_size, extract_fn)
+      vdb = make_vdb(img_dp, patch_size, extract_fn)
       vdb.save(index_fp)
       print('>> index filesize:', os.path.getsize(index_fp) / 2**20, 'MB')
     self.vdb = VectorDB.load(index_fp)
@@ -159,6 +164,9 @@ if __name__ == '__main__':
   from model import get_model
   from plot import *
 
+  ref_db = 'NIPS17'
+  #ref_db = 'ImageNet'
+
   #fp = DATA_IMAGENET_1K_PATH / 'val' / 'ILSVRC2012_val_00000031.png'
   fp = DATA_NIPS17_ADV_PATH / '0.png'
   im = load_im(fp, 'f32')
@@ -170,7 +178,8 @@ if __name__ == '__main__':
     pred_X = logits_X.argmax(dim=-1)
     prob_X = F.softmax(logits_X, dim=-1)[0, pred_X.item()].item()
 
-  dfn = PatchReplaceDefense(patch_size=16, order=0)
+  dfn = PatchReplaceDefense(ref_db, patch_size=16, order=1)
+  breakpoint()
   s = time()
   BX = dfn(X)
   t = time()
