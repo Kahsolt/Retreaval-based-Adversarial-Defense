@@ -4,10 +4,13 @@
 
 ----
 
+⚠ status: it is seemingly a degenerated version of the MAE defense which also failed against PGD attack, leaving for future research :(
+
+
 Ideas of the retreaval-based methods:
 
-- [ ] input pixel patch
-- [ ] input pixel textual patch (f')
+- [x] input pixel patch
+- [x] input pixel textual patch (f')
 - [ ] cnn fmap patch
 - [ ] cnn fmap textual patch
 
@@ -34,7 +37,7 @@ Ideas of the retreaval-based methods:
 
 - [x] implement `defenses.vector_db`
 - [x] implement `defenses.img_hifreq`
-- [ ] implement `defenses.patch_replace`
+- [x] implement `defenses.patch_replace`
 
 
 #### references
