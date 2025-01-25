@@ -1,0 +1,566 @@
+{
+  "resnet18": [
+    {
+      "cmd": "run.py",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "atk": false,
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "step": 10,
+        "nrs": false,
+        "dfn": false,
+        "seed": 114514,
+        "logdb_fp": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-03 23:55:46.365287",
+      "ts": 4.500327825546265,
+      "metrics": {
+        "acc": 0.918,
+        "racc": 0.918,
+        "asr": 0.08199999999999996,
+        "pcr": 0.0,
+        "atr": 0.0
+      }
+    },
+    {
+      "cmd": "run.py --atk",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "atk": true,
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "step": 10,
+        "nrs": false,
+        "dfn": false,
+        "seed": 114514,
+        "logdb_fp": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-03 23:57:29.092488",
+      "ts": 20.991445302963257,
+      "metrics": {
+        "acc": 0.918,
+        "racc": 0.002,
+        "asr": 0.998,
+        "pcr": 0.957,
+        "atr": 0.9978213507625272
+      }
+    },
+    {
+      "cmd": "run.py --atk FGSM",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "atk": "FGSM",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": false,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-07 00:45:51.178188",
+      "ts": 20.255355834960938,
+      "metrics": {
+        "acc": 0.918,
+        "racc": 0.02,
+        "asr": 0.98,
+        "pcr": 0.938,
+        "atr": 0.9782135076252724
+      }
+    },
+    {
+      "cmd": "run.py --atk PGD --steps 4",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 4,
+        "nrs": false,
+        "dfn": false,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-07 00:47:42.353581",
+      "ts": 25.819941520690918,
+      "metrics": {
+        "acc": 0.918,
+        "racc": 0.002,
+        "asr": 0.998,
+        "pcr": 0.954,
+        "atr": 0.9978213507625272
+      }
+    },
+    {
+      "cmd": "run.py --atk MIFGSM",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "atk": "MIFGSM",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": false,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-07 00:51:34.140875",
+      "ts": 51.76025629043579,
+      "metrics": {
+        "acc": 0.918,
+        "racc": 0.0,
+        "asr": 1.0,
+        "pcr": 0.955,
+        "atr": 1.0
+      }
+    },
+    {
+      "cmd": "run.py",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": false,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-08 23:17:34.871235",
+      "ts": 28.430072784423828,
+      "metrics": {
+        "acc": 0.918,
+        "racc": 0.002,
+        "asr": 0.998,
+        "pcr": 0.957,
+        "atr": 0.9978213507625272
+      }
+    },
+    {
+      "cmd": "run.py",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": false,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-10 15:37:19.385362",
+      "ts": 29.237752676010132,
+      "metrics": {
+        "acc": 0.918,
+        "racc": 0.002,
+        "asr": 0.998,
+        "pcr": 0.957,
+        "atr": 0.9978213507625272
+      }
+    },
+    {
+      "cmd": "run.py --atk FGSM",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "atk": "FGSM",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": false,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-10 15:38:13.552634",
+      "ts": 7.288782358169556,
+      "metrics": {
+        "acc": 0.918,
+        "racc": 0.02,
+        "asr": 0.98,
+        "pcr": 0.937,
+        "atr": 0.9782135076252724
+      }
+    },
+    {
+      "cmd": "run.py",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "atk": "none",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": false,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 19:12:47.086261",
+      "ts": 16.848559856414795,
+      "metrics": {
+        "acc": 0.918,
+        "racc": 0.918,
+        "asr": 0.08199999999999996,
+        "pcr": 0.0,
+        "atr": 0.0
+      }
+    },
+    {
+      "cmd": "run.py --dfn --limit 100",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 100,
+        "atk": "None",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": true,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 19:27:03.656488",
+      "ts": 201.8556308746338,
+      "metrics": {
+        "acc": 0.94,
+        "racc": 0.94,
+        "asr": 0.06000000000000005,
+        "pcr": 0.0,
+        "atr": 0.0
+      }
+    },
+    {
+      "cmd": "run.py --dfn --limit 100",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 100,
+        "atk": "None",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": true,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 20:06:40.702015",
+      "ts": 190.00423288345337,
+      "metrics": {
+        "acc": 0.94,
+        "racc": 0.94,
+        "asr": 0.06000000000000005,
+        "pcr": 0.0,
+        "atr": 0.0
+      }
+    },
+    {
+      "cmd": "run.py --atk PGD --limit 10",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 10,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": false,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 20:07:02.537374",
+      "ts": 3.8177108764648438,
+      "metrics": {
+        "acc": 0.9,
+        "racc": 0.0,
+        "asr": 1.0,
+        "pcr": 0.9,
+        "atr": 1.0
+      }
+    },
+    {
+      "cmd": "run.py --atk PGD --limit 10 --dfn",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 10,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": true,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 20:11:06.869484",
+      "ts": 228.44774794578552,
+      "metrics": {
+        "acc": 0.9,
+        "racc": 0.3,
+        "asr": 0.7,
+        "pcr": 0.6,
+        "atr": 0.6666666666666666
+      }
+    },
+    {
+      "cmd": "run.py --dfn PatchReplace --limit 10",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 10,
+        "atk": "None",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": "PatchReplace",
+        "patch_size": 16,
+        "order": 0,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 21:03:32.372174",
+      "ts": 19.12864112854004,
+      "metrics": {
+        "acc": 0.9,
+        "racc": 0.9,
+        "asr": 0.09999999999999998,
+        "pcr": 0.0,
+        "atr": 0.0
+      }
+    },
+    {
+      "cmd": "run.py --dfn PatchReplace --limit 10 --atk PGD",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 10,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": "PatchReplace",
+        "patch_size": 16,
+        "order": 0,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 21:11:54.773369",
+      "ts": 228.3870689868927,
+      "metrics": {
+        "acc": 0.9,
+        "racc": 0.9,
+        "asr": 0.09999999999999998,
+        "pcr": 0.0,
+        "atr": 0.0
+      }
+    },
+    {
+      "cmd": "run.py --dfn PatchReplace --limit 10 --atk PGD",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 10,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": "PatchReplace",
+        "patch_size": 16,
+        "order": 0,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 21:18:42.877120",
+      "ts": 232.11673164367676,
+      "metrics": {
+        "acc": 0.2,
+        "racc": 0.1,
+        "asr": 0.9,
+        "pcr": 0.4,
+        "atr": 0.5
+      }
+    },
+    {
+      "cmd": "run.py",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": -1,
+        "atk": "None",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": "None",
+        "patch_size": 16,
+        "order": 0,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 21:19:47.253452",
+      "ts": 17.04313611984253,
+      "metrics": {
+        "acc": 0.918,
+        "racc": 0.918,
+        "asr": 0.08199999999999996,
+        "pcr": 0.0,
+        "atr": 0.0
+      }
+    },
+    {
+      "cmd": "run.py --dfn PatchReplace --limit 10 --atk PGD --order 1",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 10,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": "PatchReplace",
+        "patch_size": 16,
+        "order": 1,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 21:24:14.858137",
+      "ts": 226.5690426826477,
+      "metrics": {
+        "acc": 0.7,
+        "racc": 0.0,
+        "asr": 1.0,
+        "pcr": 0.8,
+        "atr": 1.0
+      }
+    },
+    {
+      "cmd": "run.py --dfn PatchReplace --limit 10 --atk PGD --order 0 --patch_size 8",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 10,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": "PatchReplace",
+        "patch_size": 8,
+        "order": 0,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-15 22:17:42.429823",
+      "ts": 2606.1759617328644,
+      "metrics": {
+        "acc": 0.6,
+        "racc": 0.0,
+        "asr": 1.0,
+        "pcr": 0.8,
+        "atr": 1.0
+      }
+    },
+    {
+      "cmd": "run.py -L 10 --atk PGD --dfn PatchReplace --ref_db ImageNet",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 10,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": "PatchReplace",
+        "ref_db": "ImageNet",
+        "patch_size": 16,
+        "order": 0,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-16 21:01:46.531722",
+      "ts": 196.2784399986267,
+      "metrics": {
+        "acc": 0.9,
+        "racc": 0.9,
+        "asr": 0.09999999999999998,
+        "pcr": 0.0,
+        "atr": 0.0
+      }
+    },
+    {
+      "cmd": "run.py -L 10 --atk PGD --dfn PatchReplace --ref_db ImageNet --order 1",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 10,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": "PatchReplace",
+        "ref_db": "ImageNet",
+        "patch_size": 16,
+        "order": 1,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-16 21:08:23.955278",
+      "ts": 200.20619893074036,
+      "metrics": {
+        "acc": 0.9,
+        "racc": 0.3,
+        "asr": 0.7,
+        "pcr": 0.6,
+        "atr": 0.6666666666666666
+      }
+    },
+    {
+      "cmd": "run.py -L 10 --atk PGD --dfn PatchReplace --ref_db NIPS17 --order 0",
+      "args": {
+        "model": "resnet18",
+        "batch_size": 20,
+        "limit": 10,
+        "atk": "PGD",
+        "eps": 0.03137254901960784,
+        "alpha": 0.00392156862745098,
+        "steps": 10,
+        "nrs": false,
+        "dfn": "PatchReplace",
+        "ref_db": "NIPS17",
+        "patch_size": 16,
+        "order": 0,
+        "seed": 114514,
+        "logdb": "C:\\Workspace\\@Commission\\Retreaval-based-Adversarial-Defense\\log\\run.json"
+      },
+      "dt": "2024-02-16 21:15:11.043659",
+      "ts": 209.99487853050232,
+      "metrics": {
+        "acc": 0.2,
+        "racc": 0.1,
+        "asr": 0.9,
+        "pcr": 0.4,
+        "atr": 0.5
+      }
+    }
+  ]
+}

@@ -6,8 +6,8 @@ __pycache__/
 data/
 
 # logs
-log/
-*.log
+#log/
+#*.log
 
 # defenses
 *.index
